@@ -3,7 +3,6 @@ package com.momentum.impl.modules.combat.autototem;
 import com.momentum.api.event.FeatureListener;
 import com.momentum.asm.mixins.vanilla.accessors.INetHandlerPlayClient;
 import com.momentum.impl.events.vanilla.network.InboundPacketEvent;
-import com.momentum.impl.modules.combat.autototem.AutoTotemModule;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.ClickType;

@@ -1,11 +1,15 @@
 package com.momentum.impl.modules.render.nametags;
 
+import com.momentum.Momentum;
 import com.momentum.api.event.FeatureListener;
 import com.momentum.api.util.render.GlUtil;
 import com.momentum.api.util.render.InterpolationUtil;
+import com.momentum.asm.mixins.vanilla.accessors.INetHandlerPlayClient;
 import com.momentum.asm.mixins.vanilla.accessors.IRenderManager;
 import com.momentum.impl.events.forge.RenderWorldEvent;
 import com.momentum.impl.init.Handlers;
+import com.momentum.impl.managers.Relation;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
@@ -47,6 +51,11 @@ public class RenderWorldListener extends FeatureListener<NametagsModule, RenderW
     @Override
     public void invoke(RenderWorldEvent event) {
 
+        // null check
+        if (mc.player == null || mc.world == null || !((INetHandlerPlayClient) mc.player.connection).isDoneLoadingTerrain()) {
+            return;
+        }
+
         // make sure the render engine exists
         if (mc.renderEngine != null && mc.getRenderManager().options != null) {
 
@@ -54,7 +63,8 @@ public class RenderWorldListener extends FeatureListener<NametagsModule, RenderW
             if (mc.getRenderViewEntity() != null) {
 
                 // interpolate the player's position
-                Vec3d interpolate = InterpolationUtil.getInterpolatedPosition(mc.getRenderViewEntity(), mc.getRenderPartialTicks());
+                Vec3d interpolate = InterpolationUtil.getInterpolatedPosition(
+                        mc.getRenderViewEntity(), mc.getRenderPartialTicks());
 
                 // get our render offsets.
                 double x = ((IRenderManager) mc.getRenderManager()).getRenderX();
@@ -63,6 +73,11 @@ public class RenderWorldListener extends FeatureListener<NametagsModule, RenderW
 
                 // render for all players in world
                 for (EntityPlayer p : mc.world.playerEntities) {
+
+                    // don't nametag local player
+                    if (p == mc.player) {
+                        continue;
+                    }
 
                     // player info
                     String info = getInfo(p);
@@ -107,9 +122,9 @@ public class RenderWorldListener extends FeatureListener<NametagsModule, RenderW
                         if (feature.borderedOption.getVal()) {
 
                             // draw rect behind nametag
-                            // GlStateManager.enableBlend();
-                            GlUtil.rect(-hwidth - 1, -mc.fontRenderer.FONT_HEIGHT - 2, width, mc.fontRenderer.FONT_HEIGHT + 2, 0x0000005b);
-                            // GlStateManager.disableBlend();
+                            GlStateManager.enableBlend();
+                            GlUtil.rect(-hwidth - 1, -mc.fontRenderer.FONT_HEIGHT - 2, width, mc.fontRenderer.FONT_HEIGHT + 2, 0x5b000000);
+                            GlStateManager.disableBlend();
                         }
 
                         // nametag color
@@ -236,7 +251,7 @@ public class RenderWorldListener extends FeatureListener<NametagsModule, RenderW
 
                                         // scale to 1/2
                                         GlStateManager.pushMatrix();
-                                        GlStateManager.scale(0.5, 0.5, 0.5);
+                                        GlStateManager.scale(0.5f, 0.5f, 0.5f);
 
                                         // rescale position
                                         float sx = (off + 1.0f) * 2;
@@ -249,7 +264,7 @@ public class RenderWorldListener extends FeatureListener<NametagsModule, RenderW
                                         eoff += mc.fontRenderer.FONT_HEIGHT - 0.5f;
 
                                         // reset scale
-                                        GlStateManager.scale(2, 2, 2);
+                                        GlStateManager.scale(2.0f, 2.0f, 2.0f);
                                         GlStateManager.popMatrix();
                                     }
                                 }
@@ -259,7 +274,7 @@ public class RenderWorldListener extends FeatureListener<NametagsModule, RenderW
 
                                     // scale by 1/2
                                     GlStateManager.pushMatrix();
-                                    GlStateManager.scale(0.5, 0.5, 0.5);
+                                    GlStateManager.scale(0.5f, 0.5f, 0.5f);
 
                                     // mark as god apple
                                     if (i.getItem() instanceof ItemAppleGold) {
@@ -358,7 +373,7 @@ public class RenderWorldListener extends FeatureListener<NametagsModule, RenderW
                                     }
 
                                     // reset scale
-                                    GlStateManager.scale(2, 2, 2);
+                                    GlStateManager.scale(2.0f, 2.0f, 2.0f);
                                     GlStateManager.popMatrix();
                                 }
 
@@ -370,7 +385,7 @@ public class RenderWorldListener extends FeatureListener<NametagsModule, RenderW
 
                                     // scale by 1/2
                                     GlStateManager.pushMatrix();
-                                    GlStateManager.scale(0.5, 0.5, 0.5);
+                                    GlStateManager.scale(0.5f, 0.5f, 0.5f);
 
                                     // width of the item name
                                     float iwidth = mc.fontRenderer.getStringWidth(name) * 0.5f;
@@ -390,14 +405,14 @@ public class RenderWorldListener extends FeatureListener<NametagsModule, RenderW
                                     }
 
                                     // rescale position
-                                    float sx = (-ihwidth + 1) * 2;
+                                    float sx = (-ihwidth + 1.0f) * 2;
                                     float sy = (-mc.fontRenderer.FONT_HEIGHT + (scaledSize * -4.75f) - (esize == 0 ? 3.0f : 0.0f)) * 2;
 
                                     // draw item name
                                     mc.fontRenderer.drawStringWithShadow(name, sx, sy, -1);
                                     
                                     // reset scale
-                                    GlStateManager.scale(2, 2, 2);
+                                    GlStateManager.scale(2.0f, 2.0f, 2.0f);
                                     GlStateManager.popMatrix();
                                 }
 
@@ -472,9 +487,13 @@ public class RenderWorldListener extends FeatureListener<NametagsModule, RenderW
                     // connection info
                     NetworkPlayerInfo connection = mc.getConnection().getPlayerInfo(in.getUniqueID());
 
-                    // latency in ms
-                    info.append(connection.getResponseTime())
-                            .append("ms ");
+                    // check if connection exists
+                    if (connection != null) {
+
+                        // latency in ms
+                        info.append(connection.getResponseTime())
+                                .append("ms ");
+                    }
                 }
             }
 
@@ -586,6 +605,11 @@ public class RenderWorldListener extends FeatureListener<NametagsModule, RenderW
      */
     @SuppressWarnings("ConstantConditions")
     private int getColor(EntityPlayer in) {
+
+        // aqua
+        if (Momentum.RELATION_MANGER.isRelation(in, Relation.FRIEND)) {
+            return 0xff66ffff;
+        }
 
         // red
         if (in.isInvisible()) {

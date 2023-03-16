@@ -4,6 +4,8 @@ import com.momentum.Momentum;
 import com.momentum.api.command.Command;
 import com.momentum.api.module.Module;
 import com.momentum.api.registry.Registry;
+import com.momentum.impl.commands.FakePlayerCommand;
+import com.momentum.impl.commands.FriendCommand;
 import com.momentum.impl.commands.SetCommand;
 
 /**
@@ -28,7 +30,8 @@ public class CommandRegistry extends Registry<Command> {
 
         // register commands
         register(
-
+                new FriendCommand(),
+                new FakePlayerCommand()
         );
     }
 }

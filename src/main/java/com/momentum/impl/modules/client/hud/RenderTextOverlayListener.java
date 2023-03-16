@@ -416,15 +416,14 @@ public class RenderTextOverlayListener extends FeatureListener<HudModule, Render
             // format coordinates
             StringBuilder coordinateString =
                     new StringBuilder()
-                            .append("XYZ (")
+                            .append("XYZ ")
                             .append(TextFormatting.WHITE)
                             .append(x, 0, x.indexOf(".") + 2) // overworld
                             .append(", ")
                             .append(y, 0, y.indexOf(".") + 2)
                             .append(", ")
                             .append(z, 0, z.indexOf(".") + 2)
-                            .append(TextFormatting.RESET)
-                            .append(")");
+                            .append(TextFormatting.RESET);
 
             // display players coordinates in the nether/overworld
             if (feature.netherCoordinatesOption.getVal()) {
@@ -465,12 +464,12 @@ public class RenderTextOverlayListener extends FeatureListener<HudModule, Render
             StringBuilder directionString =
                     new StringBuilder()
                             .append(Formatter.capitalise(direction.getName()))
-                            .append(" (")
+                            .append(" [")
                             .append(TextFormatting.WHITE)
                             .append(Formatter.formatEnum(direction.getAxis()))
                             .append(axisDirection.equals(AxisDirection.POSITIVE) ? "+" : "-")
                             .append(TextFormatting.RESET)
-                            .append(")");
+                            .append("]");
 
             // draw string
             mc.fontRenderer.drawStringWithShadow(directionString.toString(), 2, bottomLeft, Modules.COLOR_MODULE.getColorInt());

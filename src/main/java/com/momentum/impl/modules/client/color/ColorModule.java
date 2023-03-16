@@ -70,7 +70,10 @@ public class ColorModule extends ConcurrentModule {
      * @return The RGB int for the client color
      */
     public int getColorInt() {
-        return getColor().getRGB();
+
+        // client color
+        Color c = getColor();
+        return c.getRGB();
     }
 
     /**
@@ -80,6 +83,9 @@ public class ColorModule extends ConcurrentModule {
      * @return The RGB int for the client color
      */
     public int getColorInt(int alpha) {
-        return getColor(alpha).getRGB();
+
+        // client color
+        Color c = getColor(alpha);
+        return c.getRGB();
     }
 }

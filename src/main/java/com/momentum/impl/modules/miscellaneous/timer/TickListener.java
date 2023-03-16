@@ -2,6 +2,7 @@ package com.momentum.impl.modules.miscellaneous.timer;
 
 import com.momentum.api.event.FeatureListener;
 import com.momentum.asm.mixins.vanilla.accessors.IMinecraft;
+import com.momentum.asm.mixins.vanilla.accessors.INetHandlerPlayClient;
 import com.momentum.asm.mixins.vanilla.accessors.ITimer;
 import com.momentum.impl.events.vanilla.TickEvent;
 import com.momentum.impl.init.Handlers;
@@ -23,6 +24,11 @@ public class TickListener extends FeatureListener<TimerModule, TickEvent> {
 
     @Override
     public void invoke(TickEvent event) {
+
+        // null check
+        if (mc.player == null || mc.world == null || !((INetHandlerPlayClient) mc.player.connection).isDoneLoadingTerrain()) {
+            return;
+        }
 
         // sync to server tps
         // the concept behind this being that client actions are more synchronized with server actions

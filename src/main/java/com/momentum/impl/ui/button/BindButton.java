@@ -1,6 +1,9 @@
 package com.momentum.impl.ui.button;
 
+import com.momentum.Momentum;
+import com.momentum.api.feature.Feature;
 import com.momentum.api.feature.Option;
+import com.momentum.impl.init.Handlers;
 import net.minecraft.util.text.TextFormatting;
 import org.lwjgl.input.Keyboard;
 
@@ -60,11 +63,22 @@ public class BindButton extends OptionButton<Integer> {
         // check if we are listening for key input
         if (listen) {
 
+            // associated feature
+            Feature feature = option.getFeature();
+
             // unbind
             if (key == Keyboard.KEY_ESCAPE || key == Keyboard.KEY_BACK) {
 
                 // update the bind
                 option.setVal(Keyboard.KEY_NONE);
+
+                // make sure macro registry has been loaded
+                if (Momentum.MACRO_REGISTRY != null) {
+
+                    // update macro
+                    Handlers.MACRO_HANDLER
+                            .setKey(feature.getName().toLowerCase() + "_macro", Keyboard.KEY_NONE);
+                }
             }
 
             // input bind
@@ -72,6 +86,14 @@ public class BindButton extends OptionButton<Integer> {
 
                 // update the bind
                 option.setVal(key);
+
+                // make sure macro registry has been loaded
+                if (Momentum.MACRO_REGISTRY != null) {
+
+                    // update macro
+                    Handlers.MACRO_HANDLER
+                            .setKey(feature.getName().toLowerCase() + "_macro", key);
+                }
             }
 
             // no longer listening

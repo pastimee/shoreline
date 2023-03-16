@@ -16,8 +16,8 @@ public class SprintModule extends Module {
             new Option<>("Mode", "Mode for sprinting", SprintMode.RAGE);
 
     // listeners
-    public final UpdateListener updateListener =
-            new UpdateListener(this);
+    public final TickListener tickListener =
+            new TickListener(this);
     public final SprintingListener sprintingListener =
             new SprintingListener(this);
 
@@ -36,7 +36,7 @@ public class SprintModule extends Module {
 
         // listeners
         associate(
-                updateListener,
+                tickListener,
                 sprintingListener
         );
     }

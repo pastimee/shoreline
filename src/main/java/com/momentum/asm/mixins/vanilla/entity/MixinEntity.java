@@ -27,7 +27,7 @@ public abstract class MixinEntity implements Wrapper {
     /**
      * Called after the move function sets the player bounding box
      *
-     * @author auto - we were working on this yesterday and he gave me this injection
+     * @author auto
      */
     @Inject(method = "move", at = @At(value = "INVOKE", target = "Lnet/minecraft/profiler/Profiler;endSection()V", shift = Shift.BEFORE, ordinal = 0))
     private void onMove(MoverType type, double x, double y, double z, CallbackInfo ci) {

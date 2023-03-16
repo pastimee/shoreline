@@ -61,10 +61,11 @@ public class FastFallModule extends Module {
     public double getHeightFromGround() {
 
         // check all blocks within the max height
-        for (double h = 0; h < heightOption.getVal() + 0.5; h += 0.01) {
+        for (double h = 0; h < heightOption.getVal() + 0.1; h += 0.01) {
 
             // check if the fall area is empty
-            if (!mc.world.getCollisionBoxes(mc.player, mc.player.getEntityBoundingBox().offset(0, -h, 0)).isEmpty()) {
+            if (!mc.world.getCollisionBoxes(mc.player, mc.player.getEntityBoundingBox()
+                    .offset(0, -h, 0)).isEmpty()) {
 
                 // the height from the ground
                 return h;

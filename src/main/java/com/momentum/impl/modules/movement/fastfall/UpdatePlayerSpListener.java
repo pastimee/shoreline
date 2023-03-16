@@ -1,16 +1,22 @@
 package com.momentum.impl.modules.movement.fastfall;
 
-import com.momentum.Momentum;
 import com.momentum.api.event.FeatureListener;
+import com.momentum.api.util.time.Timer;
 import com.momentum.impl.events.vanilla.entity.UpdatePlayerSpEvent;
 import com.momentum.impl.init.Handlers;
 import com.momentum.impl.init.Modules;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author linus
  * @since 02/21/2023
  */
 public class UpdatePlayerSpListener extends FeatureListener<FastFallModule, UpdatePlayerSpEvent> {
+
+    // strict timer
+    private final Timer cooldown =
+            new Timer();
 
     /**
      * Default constructor
@@ -49,7 +55,8 @@ public class UpdatePlayerSpListener extends FeatureListener<FastFallModule, Upda
                 double fall = feature.getHeightFromGround();
 
                 // make sure fall is not too high
-                if (fall != -1) {
+                // check cooldown
+                if (cooldown.passed(1, TimeUnit.SECONDS) && fall != -1) {
 
                     // stop motion
                     mc.player.motionX = 0;
@@ -62,6 +69,9 @@ public class UpdatePlayerSpListener extends FeatureListener<FastFallModule, Upda
                     // lock movement
                     feature.lock = true;
                     feature.ticks = 0;
+
+                    // reset cooldown
+                    cooldown.reset();
                 }
             }
         }

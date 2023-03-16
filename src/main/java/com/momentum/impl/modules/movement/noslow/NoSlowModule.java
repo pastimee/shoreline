@@ -109,11 +109,13 @@ public class NoSlowModule extends Module {
     public void onEnable() {
         super.onEnable();
 
-        // set the slipperiness of ice to the normal block value
+        // no ice slipperiness
         if (iceOption.getVal()) {
-            Blocks.ICE.setDefaultSlipperiness(0.6F);
-            Blocks.PACKED_ICE.setDefaultSlipperiness(0.6F);
-            Blocks.FROSTED_ICE.setDefaultSlipperiness(0.6F);
+
+            // set the slipperiness of ice to the normal block value
+            Blocks.ICE.setDefaultSlipperiness(0.6f);
+            Blocks.PACKED_ICE.setDefaultSlipperiness(0.6f);
+            Blocks.FROSTED_ICE.setDefaultSlipperiness(0.6f);
         }
     }
 
@@ -140,13 +142,13 @@ public class NoSlowModule extends Module {
 
         // reset ice slipperiness to default value
         if (iceOption.getVal()) {
-            Blocks.ICE.setDefaultSlipperiness(0.98F);
-            Blocks.FROSTED_ICE.setDefaultSlipperiness(0.98F);
-            Blocks.PACKED_ICE.setDefaultSlipperiness(0.98F);
+            Blocks.ICE.setDefaultSlipperiness(0.98f);
+            Blocks.FROSTED_ICE.setDefaultSlipperiness(0.98f);
+            Blocks.PACKED_ICE.setDefaultSlipperiness(0.98f);
         }
 
         // reset timer
-        Modules.TIMER_MODULE.provide(1f);
+        Modules.TIMER_MODULE.provide(1.0f);
     }
 
     /**
@@ -155,7 +157,10 @@ public class NoSlowModule extends Module {
      * @return Whether the player is slowed
      */
     public boolean isSlowed() {
-        return !mc.player.isRiding() && !mc.player.isElytraFlying() && mc.player.isHandActive() && itemsOption.getVal();
+        return !mc.player.isRiding()
+                && !mc.player.isElytraFlying()
+                && mc.player.isHandActive()
+                && itemsOption.getVal();
     }
 
     /**
@@ -164,6 +169,9 @@ public class NoSlowModule extends Module {
      * @return Whether the player is in a screen
      */
     public boolean isInScreen() {
-        return mc.currentScreen != null && !(mc.currentScreen instanceof GuiChat || mc.currentScreen instanceof GuiEditSign || mc.currentScreen instanceof GuiRepair);
+        return mc.currentScreen != null
+                && !(mc.currentScreen instanceof GuiChat
+                || mc.currentScreen instanceof GuiEditSign
+                || mc.currentScreen instanceof GuiRepair);
     }
 }

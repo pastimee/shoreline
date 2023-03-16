@@ -50,6 +50,16 @@ public class NoRenderModule extends Module {
     public final Option<Boolean> explosionsOption =
             new Option<>("Explosions", "Removes the explosion particle effect", true);
 
+    // lag options
+    public final Option<Boolean> particleLagOption =
+            new Option<>("ParticleLag", "Prevents particle lag", true);
+    public final Option<Boolean> fireworkLagOption =
+            new Option<>("FireworkLag", "Prevents firework lag", false);
+    public final Option<Boolean> unicodeLagOption =
+            new Option<>("UnicodeLag", "Prevents the unicode lag", false);
+    public final Option<Boolean> signEditOption =
+            new Option<>("SignEdit", "Prevents the sign edit crash", false);
+
     // listeners
     public final TickListener tickListener =
             new TickListener(this);
@@ -83,6 +93,10 @@ public class NoRenderModule extends Module {
             new RenderBarrierListener(this);
     public final RenderExplosionListener renderExplosionListener =
             new RenderExplosionListener(this);
+    public final InboundPacketListener inboundPacketListener =
+            new InboundPacketListener(this);
+    public final EntitySpawnListener entitySpawnListener =
+            new EntitySpawnListener(this);
 
     public NoRenderModule() {
         super("NoRender", "Prevents certain elements from rendering", ModuleCategory.RENDER);
@@ -106,6 +120,10 @@ public class NoRenderModule extends Module {
                 barrierOption,
                 armorOption,
                 explosionsOption,
+                particleLagOption,
+                fireworkLagOption,
+                unicodeLagOption,
+                signEditOption,
                 bind,
                 drawn
         );
@@ -127,7 +145,9 @@ public class NoRenderModule extends Module {
                 renderBeaconBeamListener,
                 renderArmorModelListener,
                 renderBarrierListener,
-                renderExplosionListener
+                renderExplosionListener,
+                inboundPacketListener,
+                entitySpawnListener
         );
     }
 }

@@ -18,7 +18,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class Frame extends DrawableRect {
 
     // position and states
-    private float px, py;
+    private float px, py, fheight;
     private float off; // global module offset
     private boolean open;
     private boolean drag;
@@ -85,7 +85,7 @@ public class Frame extends DrawableRect {
         if (open) {
 
             // total frame height
-            float fheight = 3;
+            fheight = 3;
             for (ModuleButton moduleButton : moduleButtons) {
 
                 // account for button height
@@ -159,6 +159,17 @@ public class Frame extends DrawableRect {
                 moduleButton.type(charTyped, key);
             }
         }
+    }
+
+    /**
+     * Gets the total height of the frame
+     *
+     * @return The total height
+     */
+    public float getTotalHeight() {
+
+        // total height
+        return fheight;
     }
 
     /**

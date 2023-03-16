@@ -19,7 +19,6 @@ import java.nio.file.Path;
  */
 public class ClickGuiConfig extends Config<ClickGuiScreen> {
 
-
     /**
      * ClickGui Config
      */
@@ -77,7 +76,7 @@ public class ClickGuiConfig extends Config<ClickGuiScreen> {
                 markDirty(f);
 
                 // create our file output stream
-                stream = new FileOutputStream(f.toFile());
+                stream = Files.newOutputStream(f.toFile().toPath());
 
                 // write our bytes to the output stream
                 stream.write(data.toString().getBytes(StandardCharsets.UTF_8), 0, data.length());
@@ -144,7 +143,7 @@ public class ClickGuiConfig extends Config<ClickGuiScreen> {
             if (data.contains(frame.getCategory() + ".Open")) {
 
                 // open state
-                boolean open = data.getBoolean(frame.getCategory() + "Open");
+                boolean open = data.getBoolean(frame.getCategory() + ".Open");
 
                 // update frame open state
                 frame.open(open);

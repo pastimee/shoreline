@@ -1,7 +1,5 @@
 package com.momentum.api.module;
 
-import com.momentum.api.feature.IConcurrent;
-
 /**
  * Module without toggle capabilities
  *

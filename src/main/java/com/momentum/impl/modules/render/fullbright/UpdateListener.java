@@ -32,6 +32,9 @@ public class UpdateListener extends FeatureListener<FullBrightModule, UpdateEven
         // night vision brightness
         if (feature.modeOption.getVal() == BrightMode.POTION) {
 
+            // reset gamma
+            mc.gameSettings.gammaSetting = feature.pbright;
+
             // brightness potion effect
             PotionEffect bright = new PotionEffect(MobEffects.NIGHT_VISION, 80950, 1, false, false);
 
@@ -41,6 +44,16 @@ public class UpdateListener extends FeatureListener<FullBrightModule, UpdateEven
 
         // gamma settings
         else if (feature.modeOption.getVal() == BrightMode.GAMMA) {
+
+            // reset potion effect
+            mc.player.removePotionEffect(MobEffects.NIGHT_VISION);
+
+            // check if we previously had night vision
+            if (feature.pduration > 0) {
+
+                // reapply previous night vision
+                mc.player.addPotionEffect(new PotionEffect(MobEffects.NIGHT_VISION, feature.pduration));
+            }
 
             // apply gamma
             mc.gameSettings.gammaSetting = 100;

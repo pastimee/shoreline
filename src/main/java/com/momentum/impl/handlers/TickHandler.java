@@ -1,8 +1,8 @@
 package com.momentum.impl.handlers;
 
+import com.momentum.Momentum;
 import com.momentum.api.event.Listener;
 import com.momentum.api.handler.Handler;
-import com.momentum.api.util.Wrapper;
 import com.momentum.asm.mixins.vanilla.accessors.INetHandlerPlayClient;
 import com.momentum.impl.events.vanilla.network.InboundPacketEvent;
 import net.minecraft.network.play.server.SPacketTimeUpdate;
@@ -17,17 +17,19 @@ import java.util.Queue;
  * @author linus
  * @since 02/11/2023
  */
-public class TickHandler extends Handler implements Wrapper {
+public class TickHandler extends Handler {
 
     // time since last tick
     private long time;
     private float last;
+    private float min;
 
     // server tps
     private float tps;
 
     // last 20 updates
-    private final Queue<Float> times = new ArrayDeque<>(20);
+    private final Queue<Float> times =
+            new ArrayDeque<>(20);
 
     /**
      * Manages server ticks
@@ -35,7 +37,7 @@ public class TickHandler extends Handler implements Wrapper {
     public TickHandler() {
 
         // tick impl
-        associate(new Listener<InboundPacketEvent>() {
+        Momentum.EVENT_BUS.subscribe(new Listener<InboundPacketEvent>() {
 
             @Override
             public void invoke(InboundPacketEvent event) {
@@ -56,6 +58,7 @@ public class TickHandler extends Handler implements Wrapper {
 
                     // tps is average of times
                     tps = average(times);
+                    min = minimum(times);
 
                     // reset time since last tick
                     time = System.currentTimeMillis();
@@ -73,13 +76,13 @@ public class TickHandler extends Handler implements Wrapper {
     private float average(Queue<Float> times) {
 
         // average time
-        float avg = 0;
+        float avg = 0.0f;
 
         // add times to average
         for (float t : times) {
 
             // clamp time
-            avg += MathHelper.clamp(t, 0, 20);
+            avg += MathHelper.clamp(t, 0.0f, 20.0f);
         }
 
         // make sure times size isn't 0
@@ -91,6 +94,32 @@ public class TickHandler extends Handler implements Wrapper {
 
         // avg
         return avg;
+    }
+
+    /**
+     * Gets the minimum of the times
+     *
+     * @param times The times
+     * @return The minimum of the times
+     */
+    private float minimum(Queue<Float> times) {
+
+        // min time
+        float min = 20.0f;
+
+        // add times to average
+        for (float t : times) {
+
+            // found min
+            if (t < min) {
+
+                // clamp time
+                min = MathHelper.clamp(t, 0.0f, 20.0f);
+            }
+        }
+
+        // avg
+        return min;
     }
 
     /**
@@ -109,5 +138,14 @@ public class TickHandler extends Handler implements Wrapper {
      */
     public float getLast() {
         return last;
+    }
+
+    /**
+     * Gets the minimum time
+     *
+     * @return The minimum time
+     */
+    public float getMinimal() {
+        return min;
     }
 }

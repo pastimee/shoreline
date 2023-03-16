@@ -3,6 +3,8 @@ package com.momentum.impl.ui;
 import com.momentum.api.module.ModuleCategory;
 import com.momentum.impl.init.Modules;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.util.math.MathHelper;
+import org.lwjgl.input.Mouse;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -53,6 +55,15 @@ public class ClickGuiScreen extends GuiScreen {
 
         // run events on all category frames
         for (Frame c : frames) {
+
+            // mouse over
+            if (c.isWithin(MOUSE_X, MOUSE_Y)) {
+
+                // scroll length
+                int scroll = Mouse.getDWheel();
+                c.position(c.x,
+                        c.y + MathHelper.clamp( -scroll * 0.5f, -c.getTotalHeight(), 0));
+            }
 
             // run event
             c.draw(mouseX, mouseY);

@@ -1,19 +1,18 @@
 package com.momentum.impl.configs;
 
 import com.moandjiezana.toml.Toml;
+import com.momentum.Momentum;
 import com.momentum.api.config.Config;
 import com.momentum.api.feature.Option;
 import com.momentum.api.module.ConcurrentModule;
 import com.momentum.api.module.Module;
-import com.momentum.Momentum;
 import com.momentum.api.util.render.Formatter;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 import org.lwjgl.input.Keyboard;
 
-import java.awt.Color;
-import java.io.FileOutputStream;
+import java.awt.*;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
@@ -79,7 +78,7 @@ public class UserConfig extends Config<Module> {
                     markDirty(f);
 
                     // create our file output stream
-                    stream = new FileOutputStream(f.toFile());
+                    stream = Files.newOutputStream(f.toFile().toPath());
 
                     // write our bytes to the output stream
                     stream.write(data.getBytes(StandardCharsets.UTF_8), 0, data.length());
@@ -155,7 +154,8 @@ public class UserConfig extends Config<Module> {
                 for (Option<?> option : module.getOptions()) {
 
                     // ignore enabled
-                    if (module instanceof ConcurrentModule && option.getName().equalsIgnoreCase("Enabled")) {
+                    if (module instanceof ConcurrentModule &&
+                            option.getName().equalsIgnoreCase("Enabled")) {
                         continue;
                     }
 
@@ -456,6 +456,11 @@ public class UserConfig extends Config<Module> {
             // newline
             data.append("\r\n");
         }
+
+        // enabled state
+        data.append("Enabled = ")
+                .append(m.isEnabled())
+                .append("\r\n");
 
         // return compiled data
         return data.toString();

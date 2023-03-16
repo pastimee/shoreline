@@ -7,6 +7,7 @@ import com.momentum.impl.events.vanilla.entity.UpdateEvent;
 import com.momentum.impl.init.Modules;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.network.play.client.CPacketEntityAction;
+import net.minecraft.network.play.client.CPacketEntityAction.Action;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import org.lwjgl.input.Keyboard;
@@ -36,20 +37,22 @@ public class UpdateListener extends FeatureListener<NoSlowModule, UpdateEvent> {
 
                 // update server state
                 feature.serverSneaking = false;
-                mc.player.connection.sendPacket(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.STOP_SNEAKING));
+                mc.player.connection.sendPacket(new CPacketEntityAction(mc.player,
+                        Action.STOP_SNEAKING));
             }
         }
 
         // if we are slowed, then send corresponding packets
         if (feature.isSlowed()) {
 
-            // Old NCP bypass
-            // if (placeStrict.getValue()) {
-            //    mc.player.connection.sendPacket(new CPacketPlayerTryUseItemOnBlock(BlockPos.ORIGIN, EnumFacing.UP, EnumHand.MAIN_HAND, 0, 0, 0));
+            // NCP bypass
+            // if (feature.strictOption.getVal()) {
+            //    mc.player.connection.sendPacket(new CPacketPlayerTryUseItemOnBlock(BlockPos.ORIGIN, EnumFacing.UP,
+            //            EnumHand.MAIN_HAND, 0, 0, 0));
             // }
         }
 
-        // player is is in web
+        // player is in web
         if (((IEntity) mc.player).isInWeb()) {
 
             // webs and going down
@@ -66,7 +69,7 @@ public class UpdateListener extends FeatureListener<NoSlowModule, UpdateEvent> {
                 else {
 
                     // reset timer
-                    Modules.TIMER_MODULE.provide(1f);
+                    Modules.TIMER_MODULE.provide(1.0f);
                 }
             }
         }
@@ -95,28 +98,28 @@ public class UpdateListener extends FeatureListener<NoSlowModule, UpdateEvent> {
                 if (Keyboard.isKeyDown(Keyboard.KEY_UP)) {
 
                     // look up
-                    pitch -= 2;
+                    pitch -= 3;
                 }
 
                 // down arrow key
                 else if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
 
                     // look down
-                    pitch += 2;
+                    pitch += 3;
                 }
 
                 // right arrow key
                 else if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
 
                     // look right
-                    yaw += 2;
+                    yaw += 3;
                 }
 
                 // left arrow key
                 else if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
 
                     // look left
-                    yaw -= 2;
+                    yaw -= 3;
                 }
 
                 // update player rotation

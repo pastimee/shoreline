@@ -34,7 +34,7 @@ public class OutboundPacketListener extends FeatureListener<NoSlowModule, Outbou
                 if (feature.isSlowed()) {
 
                     // NCP bypass
-                    // if (strict.getValue()) {
+                    // if (feature.strictOption.getVal()) {
                     //    mc.player.connection.sendPacket(new CPacketPlayerDigging(CPacketPlayerDigging.Action.ABORT_DESTROY_BLOCK, BlockPos.ORIGIN, EnumFacing.DOWN));
                     // }
 
@@ -67,6 +67,7 @@ public class OutboundPacketListener extends FeatureListener<NoSlowModule, Outbou
 
                     // stop sneaking before item use
                     mc.player.connection.sendPacket(new CPacketEntityAction(mc.player, Action.STOP_SNEAKING));
+                    feature.serverSneaking = false;
                 }
 
                 // we also cannot be sprinting, because that'll also flag NCP-Updated

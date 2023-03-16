@@ -3,6 +3,7 @@ package com.momentum;
 import com.momentum.api.event.EventBus;
 import com.momentum.impl.handlers.*;
 import com.momentum.impl.managers.ChatManager;
+import com.momentum.impl.managers.RelationManager;
 import com.momentum.impl.registers.*;
 import com.momentum.impl.init.Configs;
 import com.momentum.impl.ui.ClickGuiScreen;
@@ -38,9 +39,14 @@ public class Momentum {
 
     // managers
     public static ChatManager CHAT_MANAGER;
+    public static RelationManager RELATION_MANGER;
 
     // click gui
     public static ClickGuiScreen CLICK_GUI;
+
+    // packet logger
+    // REMOVE BEFORE RELEASE BUILD
+    public static PacketLogger PACKET_LOGGER;
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
@@ -62,6 +68,7 @@ public class Momentum {
 
         // initialize managers
         CHAT_MANAGER = new ChatManager();
+        RELATION_MANGER = new RelationManager();
 
         // initialize click gui
         CLICK_GUI = new ClickGuiScreen();
@@ -78,5 +85,9 @@ public class Momentum {
         catch (Exception e) {
             e.printStackTrace();
         }
+
+        // packet logger
+        // REMOVE BEFORE RELEASE BUILD
+        PACKET_LOGGER = new PacketLogger();
     }
 }

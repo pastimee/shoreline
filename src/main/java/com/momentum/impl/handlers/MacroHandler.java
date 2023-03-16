@@ -3,7 +3,7 @@ package com.momentum.impl.handlers;
 import com.momentum.Momentum;
 import com.momentum.api.event.Listener;
 import com.momentum.api.handler.Handler;
-import com.momentum.api.module.Module;
+import com.momentum.api.macro.Macro;
 import com.momentum.impl.events.vanilla.KeyInputEvent;
 import org.lwjgl.input.Keyboard;
 
@@ -21,24 +21,38 @@ public class MacroHandler extends Handler {
     public MacroHandler() {
 
         // keybind impl
-        associate(new Listener<KeyInputEvent>() {
+        Momentum.EVENT_BUS.subscribe(new Listener<KeyInputEvent>() {
 
             @Override
             public void invoke(KeyInputEvent event) {
 
-                // check all modules for toggle
-                for (Module m : Momentum.MODULE_REGISTRY.getData()) {
+                // check all macros
+                for (Macro m : Momentum.MACRO_REGISTRY.getData()) {
 
-                    // check if the module is toggle-able
-                    // check if module's bind key is pressed
-                    int bind = m.getBind();
-                    if (Keyboard.isKeyDown(bind) && !Keyboard.isKeyDown(Keyboard.KEY_NONE)) {
+                    // check if macro's key is pressed
+                    int key = m.getKey();
+                    if (Keyboard.isKeyDown(key) && !Keyboard.isKeyDown(Keyboard.KEY_NONE)) {
 
-                        // toggle the feature
-                        m.toggle();
+                        // run the macro
+                        m.onPress();
                     }
                 }
             }
         });
+    }
+
+    /**
+     * Sets the macro key
+     *
+     * @param label The macro label
+     * @param key The new key
+     */
+    public void setKey(String label, int key) {
+
+        // macro from label
+        Macro m = Momentum.MACRO_REGISTRY.lookup(label);
+
+        // update key
+        m.setKey(key);
     }
 }

@@ -111,17 +111,6 @@ public class TimerModule extends Module implements IService<Float> {
         ticksOption.setVal(in);
     }
 
-    /**
-     * Queues to preform at a later time
-     *
-     * @param in The input
-     * @param q  The q to wait
-     */
-    @Override
-    public void queue(Float in, List<Float> q) {
-        // no impl
-    }
-
     @Override
     public String getData() {
 

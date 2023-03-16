@@ -5,7 +5,6 @@ import com.momentum.Momentum;
 import com.momentum.api.command.Command;
 import com.momentum.api.event.Listener;
 import com.momentum.api.handler.Handler;
-import com.momentum.api.util.Wrapper;
 import com.momentum.asm.mixins.vanilla.accessors.IGuiChat;
 import com.momentum.asm.mixins.vanilla.accessors.INetHandlerPlayClient;
 import com.momentum.impl.events.forge.event.ClientSendMessageEvent;
@@ -13,6 +12,7 @@ import com.momentum.impl.events.vanilla.entity.UpdateEvent;
 import com.momentum.impl.events.vanilla.gui.RenderChatBoxEvent;
 import com.momentum.impl.init.Commands;
 import net.minecraft.client.gui.GuiChat;
+import net.minecraft.client.gui.GuiTextField;
 
 import java.util.Arrays;
 
@@ -22,7 +22,7 @@ import java.util.Arrays;
  * @author linus
  * @since 02/18/2023
  */
-public class CommandHandler extends Handler implements Wrapper {
+public class CommandHandler extends Handler {
 
     // suggestion
     private StringBuilder suggestionBuilder = new StringBuilder();
@@ -33,7 +33,7 @@ public class CommandHandler extends Handler implements Wrapper {
     public CommandHandler() {
 
         // command invoke impl
-        associate(new Listener<ClientSendMessageEvent>() {
+        Momentum.EVENT_BUS.subscribe(new Listener<ClientSendMessageEvent>() {
 
             @Override
             public void invoke(ClientSendMessageEvent event) {
@@ -46,52 +46,62 @@ public class CommandHandler extends Handler implements Wrapper {
 
                     // prevent rendering
                     event.setCanceled(true);
-                    mc.ingameGUI.getChatGUI().addToSentMessages(event.getMessage());
 
-                    // remove prefix
-                    message = message.substring(1);
+                    // chat gui
+                    // GuiNewChat chat = mc.ingameGUI.getChatGUI();
 
-                    // passed arguments
-                    String[] args = message.split(" ");
+                    // make sure chat gui exists
+                    // if (chat != null) {
 
-                    // given command
-                    String command = args[0];
+                        // add to chat
+                        // chat.addToSentMessages(event.getMessage());
 
-                    // remove command from args
-                    args = Arrays.copyOfRange(args, 1, args.length);
+                        // remove prefix
+                        message = message.substring(1);
 
-                    // executable command
-                    Command executable = null;
+                        // passed arguments
+                        String[] args = message.split(" ");
 
-                    // search commands
-                    for (Command c : Momentum.COMMAND_REGISTRY.getData()) {
+                        // given command
+                        String command = args[0];
 
-                        // match
-                        if (c.startsWith(command) != -1) {
+                        // remove command from args
+                        args = Arrays.copyOfRange(args, 1, args.length);
 
-                            // mark as suggestion
-                            executable = c;
+                        // executable command
+                        Command executable = null;
+
+                        // search commands
+                        for (Command c : Momentum.COMMAND_REGISTRY.getData()) {
+
+                            // match
+                            if (c.startsWith(command) != -2) {
+
+                                // mark as suggestion
+                                executable = c;
+                                break;
+                            }
                         }
-                    }
 
-                    // execute command
-                    if (executable != null) {
+                        // execute command
+                        if (executable != null) {
 
-                        // execute
-                        executable.invoke(args);
-                    }
+                            // execute
+                            executable.invoke(args);
+                        }
 
-                    else {
+                        else {
 
-                        // unrecognized command exception
-                        Momentum.CHAT_MANAGER.send(ChatFormatting.RED + "Invalid command! Please enter a valid command.");
-                    }
+                            // unrecognized command exception
+                            Momentum.CHAT_MANAGER.send(ChatFormatting.RED + "Invalid command! Please enter a valid command.");
+                        }
+                    //}
                 }
             }
         });
 
         // suggestion impl
-        associate(new Listener<UpdateEvent>() {
+        Momentum.EVENT_BUS.subscribe(new Listener<UpdateEvent>() {
 
             @Override
             public void invoke(UpdateEvent event) {
@@ -102,101 +112,120 @@ public class CommandHandler extends Handler implements Wrapper {
                 }
 
                 // reset suggestion builder
-                suggestionBuilder = new StringBuilder();
+                StringBuilder suggestion = new StringBuilder();
 
-                // player is in chat
-                if (mc.currentScreen instanceof GuiChat) {
+                // player is in gui
+                if (mc.currentScreen != null) {
 
-                    // chat input
-                    String input = ((IGuiChat) mc.currentScreen).getInputField().getText();
+                    // player is in chat
+                    if (mc.currentScreen instanceof GuiChat) {
 
-                    // argument inputs
-                    String[] args = input.split(" ");
+                        // chat input
+                        GuiTextField input = ((IGuiChat) mc.currentScreen).getInputField();
 
-                    // event the user sends a command
-                    if (input.startsWith(Commands.PREFIX)) {
+                        // make sure input exists
+                        if (input != null) {
 
-                        // command
-                        String command = args[0].substring(1);
+                            // argument inputs
+                            String[] args = input.getText().split(" ");
 
-                        // suggestion
-                        Command suggestion = null;
+                            // event the user sends a command
+                            if (input.getText().startsWith(Commands.PREFIX)) {
 
-                        // search commands
-                        for (Command c : Momentum.COMMAND_REGISTRY.getData()) {
+                                // command
+                                String cmd = args[0].substring(1);
 
-                            // match
-                            if (c.startsWith(command) != -1) {
+                                // make sure the command is not broken
+                                if (!cmd.endsWith(" ")) {
 
-                                // mark as suggestion
-                                suggestion = c;
-                            }
-                        }
+                                    // suggestion
+                                    Command command = null;
 
-                        // args without command
-                        args = Arrays.copyOfRange(args, 1, args.length);
+                                    // search commands
+                                    for (Command c : Momentum.COMMAND_REGISTRY.getData()) {
 
-                        // found a suggestion
-                        if (suggestion != null) {
+                                        // index
+                                        int i = c.startsWith(cmd);
 
-                            // use cases
-                            String[] cases = suggestion.getUseCase().split(" ");
+                                        // match
+                                        if (i != -2) {
 
-                            // index of the suggestion
-                            int index = suggestion.startsWith(command);
+                                            // check bounds
+                                            String name = i == -1 ? c.getName() : c.getAlias(i);
+                                            if (cmd.length() <= name.length()) {
 
-                            // must match
-                            if (index == -2) {
-                                return;
-                            }
+                                                // mark as suggestion
+                                                command = c;
+                                                break;
+                                            }
+                                        }
+                                    }
 
-                            // args size
-                            for (int i = 0; i < suggestion.getArgSize(); i++) {
+                                    // args without command
+                                    args = Arrays.copyOfRange(args, 1, args.length);
 
-                                // make sure no OOB exception
-                                if (i < args.length) {
+                                    // found a suggestion
+                                    if (command != null) {
 
-                                    // sync input
-                                    cases[i] = args[i];
-                                }
-                            }
+                                        // use cases
+                                        String[] cases = command.getUseCase().split(" ");
 
-                            // prefix
-                            suggestionBuilder.append(Commands.PREFIX);
+                                        // index of the suggestion
+                                        int index = command.startsWith(cmd);
 
-                            // show suggestion
-                            if (index == -1) {
+                                        // args size
+                                        for (int i = 0; i < command.getArgSize(); i++) {
 
-                                // add name to suggestion builder
-                                suggestionBuilder
-                                        .append(suggestion.getName().toLowerCase())
-                                        .append(" ");
+                                            // make sure no OOB exception
+                                            if (i < args.length) {
 
-                                // add cases
-                                for (String c : cases) {
+                                                // sync input
+                                                cases[i] = args[i];
+                                            }
+                                        }
 
-                                    // add use cases
-                                    suggestionBuilder
-                                            .append(c)
-                                            .append(" ");
-                                }
-                            }
+                                        // prefix
+                                        suggestion.append(Commands.PREFIX);
 
-                            // alias
-                            else {
+                                        // show suggestion
+                                        if (index == -1) {
 
-                                // add aliases to suggestion
-                                suggestionBuilder
-                                        .append(suggestion.getAlias(index).toLowerCase())
-                                        .append(" ");
+                                            // add name to suggestion builder
+                                            suggestion
+                                                    .append(command.getName().toLowerCase())
+                                                    .append(" ");
 
-                                // add cases
-                                for (String c : cases) {
+                                            // add cases
+                                            for (String c : cases) {
 
-                                    // add use cases
-                                    suggestionBuilder
-                                            .append(c)
-                                            .append(" ");
+                                                // add use cases
+                                                suggestion
+                                                        .append(c)
+                                                        .append(" ");
+                                            }
+                                        }
+
+                                        // alias
+                                        else {
+
+                                            // add aliases to suggestion
+                                            suggestion
+                                                    .append(command.getAlias(index).toLowerCase())
+                                                    .append(" ");
+
+                                            // add cases
+                                            for (String c : cases) {
+
+                                                // add use cases
+                                                suggestion
+                                                        .append(c)
+                                                        .append(" ");
+                                            }
+                                        }
+
+                                        // update suggestion builder
+                                        suggestionBuilder = suggestion;
+                                    }
                                 }
                             }
                         }
@@ -206,7 +235,7 @@ public class CommandHandler extends Handler implements Wrapper {
         });
 
         // suggestion render impl
-        associate(new Listener<RenderChatBoxEvent>() {
+        Momentum.EVENT_BUS.subscribe(new Listener<RenderChatBoxEvent>() {
 
             @Override
             public void invoke(RenderChatBoxEvent event) {

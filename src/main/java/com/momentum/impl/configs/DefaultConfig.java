@@ -19,16 +19,15 @@ public class DefaultConfig extends UserConfig {
         Path pmodules = modules;
         modules = main.resolve("defaults");
 
-        // if already exists -> exit
-        if (Files.exists(modules) && Files.isDirectory(modules)) {
-            return;
-        }
-
         // catches I0Exception
         try {
 
-            // create directories
-            Files.createDirectory(modules);
+            // if already exists -> exit
+            if (!Files.exists(modules) || !Files.isDirectory(modules)) {
+
+                // create directories
+                Files.createDirectory(modules);
+            }
         }
 
         // error when writing file
@@ -58,8 +57,12 @@ public class DefaultConfig extends UserConfig {
         // catches I0Exception
         try {
 
-            // create directories
-            Files.createDirectory(modules);
+            // if already exists -> exit
+            if (!Files.exists(modules) || !Files.isDirectory(modules)) {
+
+                // create directories
+                Files.createDirectory(modules);
+            }
         }
 
         // error when writing file

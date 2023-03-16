@@ -1,4 +1,6 @@
-package com.momentum.api.feature;
+package com.momentum.api.module;
+
+import com.momentum.api.feature.IToggleable;
 
 /**
  * A Feature interface enabling persistent event listening. Incompatible with {@link IToggleable} IToggleable.

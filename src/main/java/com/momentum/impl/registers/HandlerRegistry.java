@@ -3,6 +3,7 @@ package com.momentum.impl.registers;
 import com.momentum.api.handler.Handler;
 import com.momentum.api.registry.Registry;
 import com.momentum.impl.handlers.*;
+import com.momentum.impl.handlers.hole.HoleHandler;
 
 /**
  * Registry of handlers
@@ -23,7 +24,9 @@ public class HandlerRegistry extends Registry<Handler> {
                 new CommandHandler(),
                 new NcpHandler(),
                 new TickHandler(),
-                new PopHandler()
+                new PopHandler(),
+                new RotationHandler(),
+                new HoleHandler()
         );
     }
 }

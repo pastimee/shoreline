@@ -32,8 +32,8 @@ public class MixinGuiTextField implements Wrapper {
     /**
      * Called when the chat text box is rendered
      */
-    @Inject(method = "drawTextBox", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiTextField;getEnableBackgroundDrawing()Z", shift = Shift.BEFORE), cancellable = true)
-    public void onDrawTextBox(CallbackInfo ci) {
+    @Inject(method = "drawTextBox", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiTextField;getEnableBackgroundDrawing()Z", shift = Shift.BEFORE))
+    private void onDrawTextBox(CallbackInfo ci) {
 
         // post the render chat box event
         RenderChatBoxEvent renderChatBoxEvent = new RenderChatBoxEvent();
@@ -43,7 +43,8 @@ public class MixinGuiTextField implements Wrapper {
         if (renderChatBoxEvent.isCanceled()) {
 
             // render string
-            mc.fontRenderer.drawStringWithShadow(renderChatBoxEvent.getText(), x, enableBackgroundDrawing ? y + (height - 8) / 2 : y, Color.GRAY.getRGB());
+            mc.fontRenderer.drawStringWithShadow(renderChatBoxEvent.getText(), x,
+                    enableBackgroundDrawing ? y + (height - 8) / 2.0f : y, 0xff808080);
         }
     }
 }

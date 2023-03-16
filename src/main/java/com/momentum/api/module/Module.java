@@ -6,6 +6,7 @@ import com.momentum.api.feature.Feature;
 import com.momentum.api.feature.IToggleable;
 import com.momentum.api.registry.ILabel;
 import com.momentum.Momentum;
+import com.momentum.impl.init.Handlers;
 import org.lwjgl.input.Keyboard;
 
 import java.util.ArrayList;
@@ -146,6 +147,13 @@ public class Module extends Feature implements IToggleable, ILabel {
     @Override
     public void onBind() {
 
+        // make sure macro registry has been loaded
+        if (Momentum.MACRO_REGISTRY != null) {
+
+            // update macro
+            Handlers.MACRO_HANDLER
+                    .setKey(name.toLowerCase() + "_macro", bind.getVal());
+        }
     }
 
     /**

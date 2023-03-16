@@ -8,6 +8,7 @@ import com.momentum.impl.events.vanilla.entity.SprintingEvent;
  * @since 02/11/2023
  */
 public class SprintingListener extends FeatureListener<SprintModule, SprintingEvent> {
+
     protected SprintingListener(SprintModule feature) {
         super(feature);
     }

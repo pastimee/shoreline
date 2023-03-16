@@ -1,9 +1,11 @@
 package com.momentum.asm.mixins.vanilla;
 
 import com.momentum.Momentum;
+import com.momentum.impl.events.vanilla.DisplayGuiEvent;
 import com.momentum.impl.events.vanilla.KeyInputEvent;
 import com.momentum.impl.events.vanilla.TickEvent;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.At.Shift;
@@ -33,5 +35,16 @@ public class MixinMinecraft {
         // post the tick event
         TickEvent tickEvent = new TickEvent();
         Momentum.EVENT_BUS.dispatch(tickEvent);
+    }
+
+    /**
+     * Called when a gui is displayed
+     */
+    @Inject(method = "displayGuiScreen", at = @At(value = "HEAD"))
+    private void onDisplayGuiScreen(GuiScreen guiScreenIn, CallbackInfo ci) {
+
+        // post the display gui event
+        DisplayGuiEvent displayGuiEvent = new DisplayGuiEvent(guiScreenIn);
+        Momentum.EVENT_BUS.dispatch(displayGuiEvent);
     }
 }

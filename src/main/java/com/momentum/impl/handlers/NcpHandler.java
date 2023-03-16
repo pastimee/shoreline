@@ -1,5 +1,6 @@
 package com.momentum.impl.handlers;
 
+import com.momentum.Momentum;
 import com.momentum.api.event.Listener;
 import com.momentum.api.handler.Handler;
 import com.momentum.impl.events.vanilla.network.InboundPacketEvent;
@@ -22,7 +23,7 @@ public class NcpHandler extends Handler {
     public NcpHandler() {
 
         // rubberband impl
-        associate(new Listener<InboundPacketEvent>() {
+        Momentum.EVENT_BUS.subscribe(new Listener<InboundPacketEvent>() {
 
             @Override
             public void invoke(InboundPacketEvent event) {

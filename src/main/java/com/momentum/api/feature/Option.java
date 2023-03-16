@@ -95,6 +95,15 @@ public class Option<V> extends Feature implements ILabel {
     }
 
     /**
+     * Gets the associated feature
+     *
+     * @return The associate feature
+     */
+    public Feature getFeature() {
+        return feature;
+    }
+
+    /**
      * Associate with feature
      *
      * @param in The feature

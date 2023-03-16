@@ -11,12 +11,21 @@ public enum CritsMode {
     /**
      * Attempts changing hit to a critical via packets
      */
-    PACKET(0.05f, 0.0f, 0.03f, 0.0f),
+    PACKET(
+            0.05f,
+            0.0f,
+            0.03f,
+            0.0f
+    ),
 
     /**
      * Attempts changing hit to a critical via packets for Updated NCP
      */
-    PACKET_STRICT(0.11f, 0.1100013579f, 0.0000013579f);
+    PACKET_STRICT(
+            0.11f,
+            0.1100013579f,
+            0.0000013579f
+    );
 
     // packet offsets
     private final float[] offsets;

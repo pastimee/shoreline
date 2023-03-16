@@ -2,11 +2,8 @@ package com.momentum.impl.init;
 
 import com.momentum.Momentum;
 import com.momentum.api.handler.Handler;
-import com.momentum.impl.handlers.CommandHandler;
-import com.momentum.impl.handlers.MacroHandler;
-import com.momentum.impl.handlers.NcpHandler;
-import com.momentum.impl.handlers.PopHandler;
-import com.momentum.impl.handlers.TickHandler;
+import com.momentum.impl.handlers.*;
+import com.momentum.impl.handlers.hole.HoleHandler;
 
 /**
  * @author linus
@@ -15,11 +12,13 @@ import com.momentum.impl.handlers.TickHandler;
 public class Handlers {
 
     // handlers
-    public static final MacroHandler MODULE_HANDLER;
+    public static final MacroHandler MACRO_HANDLER;
     public static final CommandHandler COMMAND_HANDLER;
     public static final NcpHandler NCP_HANDLER;
     public static final TickHandler TICK_HANDLER;
     public static final PopHandler POP_HANDLER;
+    public static final RotationHandler ROTATION_HANDLER;
+    public static final HoleHandler HOLE_HANDLER;
 
     /**
      * Gets the registered handler
@@ -35,17 +34,14 @@ public class Handlers {
 
     // init handlers
     static {
-        MODULE_HANDLER = (MacroHandler) getRegisteredHandler("module_handler");
+
+        // handlers
+        MACRO_HANDLER = (MacroHandler) getRegisteredHandler("macro_handler");
         COMMAND_HANDLER = (CommandHandler) getRegisteredHandler("command_handler");
         NCP_HANDLER = (NcpHandler) getRegisteredHandler("ncp_handler");
         TICK_HANDLER = (TickHandler) getRegisteredHandler("tick_handler");
         POP_HANDLER = (PopHandler) getRegisteredHandler("pop_handler");
-
-        // subscribe all
-        MODULE_HANDLER.subscribe();
-        COMMAND_HANDLER.subscribe();
-        NCP_HANDLER.subscribe();
-        TICK_HANDLER.subscribe();
-        POP_HANDLER.subscribe();
+        ROTATION_HANDLER = (RotationHandler) getRegisteredHandler("rotation_handler");
+        HOLE_HANDLER = (HoleHandler) getRegisteredHandler("hole_handler");
     }
 }

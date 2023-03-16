@@ -14,6 +14,9 @@ public interface ICPacketPlayer {
     @Accessor("moving")
     boolean isMoving();
 
+    @Accessor("rotating")
+    boolean isRotating();
+
     @Accessor("onGround")
     void setOnGround(boolean onGround);
 }

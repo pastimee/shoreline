@@ -2,9 +2,7 @@ package com.momentum.asm.mixins.vanilla.renderer;
 
 import com.momentum.Momentum;
 import com.momentum.api.util.Wrapper;
-import com.momentum.impl.events.vanilla.renderer.RenderBlindnessEvent;
-import com.momentum.impl.events.vanilla.renderer.RenderHurtCameraEvent;
-import com.momentum.impl.events.vanilla.renderer.RenderItemActivationEvent;
+import com.momentum.impl.events.vanilla.renderer.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.ActiveRenderInfo;
@@ -23,7 +21,10 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.awt.*;
 
 @Mixin(EntityRenderer.class)
 public class MixinEntityRenderer implements Wrapper {
@@ -66,6 +67,34 @@ public class MixinEntityRenderer implements Wrapper {
         if (renderItemActivationEvent.isCanceled()) {
             ci.cancel();
         }
+    }
+
+    /**
+     * Called when the camera orientation x value is updated
+     */
+    @ModifyVariable(method = "orientCamera", at = @At("STORE"), ordinal = 3)
+    private double onOrientCameraX(double value) {
+
+        // post the orient camera event
+        OrientCameraEvent orientCameraEvent = new OrientCameraEvent();
+        Momentum.EVENT_BUS.dispatch(orientCameraEvent);
+
+        // return camera distance
+        return orientCameraEvent.isCanceled() ? orientCameraEvent.getDistance() : value;
+    }
+
+    /**
+     * Called when the camera orientation z value is updated
+     */
+    @ModifyVariable(method = "orientCamera", at = @At("STORE"), ordinal = 7)
+    private double onOrientCameraZ(double value) {
+
+        // post the orient camera event
+        OrientCameraEvent orientCameraEvent = new OrientCameraEvent();
+        Momentum.EVENT_BUS.dispatch(orientCameraEvent);
+
+        // return camera distance
+        return orientCameraEvent.isCanceled() ? orientCameraEvent.getDistance() : value;
     }
 
     /**
@@ -219,5 +248,25 @@ public class MixinEntityRenderer implements Wrapper {
         GlStateManager.enableColorMaterial();
         GlStateManager.enableFog();
         GlStateManager.colorMaterial(1028, 4608);
+    }
+
+    /**
+     * Called when the fog color is rendered
+     */
+    @Inject(method = "updateFogColor", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/GlStateManager;clearColor(FFFF)V", shift = Shift.BEFORE), cancellable = true)
+    private void onUpdateFogColor(float partialTicks, CallbackInfo ci) {
+
+        // post the render fog color event
+        RenderFogColorEvent renderFogColorEvent = new RenderFogColorEvent();
+        Momentum.EVENT_BUS.dispatch(renderFogColorEvent);
+
+        // change fog color
+        if (renderFogColorEvent.isCanceled()) {
+
+            // call glClearColor
+            Color color = new Color(renderFogColorEvent.getColor());
+            ci.cancel();
+            GlStateManager.clearColor(color.getRed(), color.getGreen(), color.getBlue(), 0.0f);
+        }
     }
 }

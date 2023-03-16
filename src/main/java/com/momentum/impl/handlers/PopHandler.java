@@ -3,7 +3,6 @@ package com.momentum.impl.handlers;
 import com.momentum.Momentum;
 import com.momentum.api.event.Listener;
 import com.momentum.api.handler.Handler;
-import com.momentum.api.util.Wrapper;
 import com.momentum.impl.events.vanilla.network.DisconnectEvent;
 import com.momentum.impl.events.vanilla.network.InboundPacketEvent;
 import com.momentum.impl.events.vanilla.world.EntityRemoveEvent;
@@ -20,7 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author linus
  * @since 03/01/2023
  */
-public class PopHandler extends Handler implements Wrapper {
+public class PopHandler extends Handler {
 
     // pop map
     private final Map<EntityPlayer, Integer> pops = new ConcurrentHashMap<>();
@@ -32,7 +31,7 @@ public class PopHandler extends Handler implements Wrapper {
     public PopHandler() {
 
         // pop counter impl
-        associate(new Listener<InboundPacketEvent>() {
+        Momentum.EVENT_BUS.subscribe(new Listener<InboundPacketEvent>() {
 
             @Override
             public void invoke(InboundPacketEvent event) {
@@ -61,7 +60,7 @@ public class PopHandler extends Handler implements Wrapper {
         });
 
         // death impl
-        associate(new Listener<EntityRemoveEvent>() {
+        Momentum.EVENT_BUS.subscribe(new Listener<EntityRemoveEvent>() {
 
             @Override
             public void invoke(EntityRemoveEvent event) {
@@ -77,7 +76,7 @@ public class PopHandler extends Handler implements Wrapper {
         });
 
         // disconnect impl
-        associate(new Listener<DisconnectEvent>() {
+        Momentum.EVENT_BUS.subscribe(new Listener<DisconnectEvent>() {
 
             @Override
             public void invoke(DisconnectEvent event) {

@@ -21,8 +21,8 @@ public class FullBrightModule extends Module {
             new UpdateListener(this);
 
     // previous info
-    private float pbright;
-    private int pduration;
+    public float pbright;
+    public int pduration;
 
     public FullBrightModule() {
         super("FullBright", "Maximizes world brightness", ModuleCategory.RENDER);
