@@ -3,16 +3,18 @@ package com.momentum.installer;
 import javax.swing.*;
 
 /**
+ *
+ *
  * @author linus
- * @since 02/22/2023
+ * @since 1.0
  */
-public class InstallerFrame extends JFrame {
-
+public class InstallerFrame extends JFrame
+{
     /**
-     * The main com.momentum.installer frame
+     * The main installer frame
      */
-    public InstallerFrame() {
-
+    public InstallerFrame()
+    {
         // setup frame
         setTitle("Momentum Installer");
         setSize(500, 300);
@@ -30,7 +32,7 @@ public class InstallerFrame extends JFrame {
         add(loginGui);
         loginGui.setVisible(true);
 
-        // this method display the JFrame to center position of a screen
+        // this method displays the JFrame to center position of a screen
         setLocationRelativeTo(null);
     }
 }

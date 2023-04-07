@@ -3,20 +3,20 @@ package com.momentum.installer;
 import javax.swing.*;
 
 /**
+ *
+ *
  * @author linus
- * @since 02/22/2023
+ * @since inst.1.0
  */
-public class LoadingGui extends JPanel {
-
+public class LoadingGui extends JPanel
+{
     /**
      * Loading screen
      */
-    public LoadingGui() {
-
-        // layout
+    public LoadingGui()
+    {
+        // clear layout
         setSize(200, 200);
         setLayout(null);
-
-
     }
 }

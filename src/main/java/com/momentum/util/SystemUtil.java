@@ -3,22 +3,22 @@ package com.momentum.util;
 import java.util.Locale;
 
 /**
+ *
+ *
  * @author linus
- * @since 02/22/2023
+ * @since 1.0
  */
-public class SystemUtil {
-
+public class SystemUtil
+{
     /**
-     * Checks if the current OS is MacOS
+     * Returns <tt>true</tt> if the current operating system is macOS
      *
-     * @return Whether the current OS is MacOS
+     * @return <tt>true</tt> if the current os is macOS
      */
-    public static boolean isMac() {
-
+    public static boolean isMacOS()
+    {
         // os name
         String os = System.getProperty("os.name").toLowerCase(Locale.ROOT);
-
-        // check if the os name contains mac
         return os.contains("mac");
     }
 }

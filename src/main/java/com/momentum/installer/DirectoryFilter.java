@@ -4,28 +4,33 @@ import javax.swing.filechooser.FileFilter;
 import java.io.File;
 
 /**
+ *
+ *
  * @author linus
- * @since 02/22/2023
+ * @since 1.0
  */
-public class DirectoryFilter extends FileFilter {
-
+public class DirectoryFilter extends FileFilter
+{
     /**
-     * Whether the given file is accepted by this filter.
+     * Return <tt>true</tt> if the given file is accepted by this filter.
      *
-     * @param f The given file
+     * @param f <tt>true</tt> if the given file is accepted by this filter.
      */
     @Override
-    public boolean accept(File f) {
-
+    public boolean accept(File f)
+    {
         // check if given file is directory
         return f.isDirectory();
     }
 
     /**
      * The description of this filter. For example: "JPG and GIF Images"
+     *
+     * @return The description of this filter.
      */
     @Override
-    public String getDescription() {
+    public String getDescription()
+    {
         return "Directories only";
     }
 }
