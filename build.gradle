@@ -1,0 +1,66 @@
+plugins {
+    id 'java'
+    id 'application'
+    id "de.undercouch.download" version "4.1.1"
+}
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+archivesBaseName = project.archives_base_name
+version = project.installer_version
+group = project.maven_group
+
+repositories {
+    maven {
+        url "https://maven.fabricmc.net"
+    }
+    maven {
+        url "https://jitpack.io"
+    }
+
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+    implementation "net.fabricmc:fabric-installer:0.9.0"
+    implementation "org.json:json:20220320"
+    implementation "com.formdev:flatlaf:3.0"
+    implementation 'org.apache.logging.log4j:log4j-api:2.20.0'
+    implementation 'org.apache.logging.log4j:log4j-core:2.20.0'
+}
+
+application {
+    mainClass.set(project.main_class)
+}
+
+processResources {
+    filesMatching("metadata.json") {
+        expand "version": project.installer_version
+    }
+}
+
+jar {
+    manifest {
+        attributes("Main-Class": application.mainClass)
+    }
+
+    from (configurations.compileClasspath.filter{ it.exists() }.collect { it.isDirectory() ? it : zipTree(it) }) {
+        exclude 'META-INF/*.SF'
+        exclude 'META-INF/*.DSA'
+        exclude 'META-INF/*.RSA'
+    }
+
+    from("LICENSE") {
+        rename { "${it}_${project.archivesBaseName}"}
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.encoding = "UTF-8"
+    def targetVersion = 8
+    if (JavaVersion.current().isJava9Compatible()) {
+        it.options.release = targetVersion
+    }
+}
