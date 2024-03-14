@@ -1068,7 +1068,7 @@ public class AutoCrystalModule extends RotationModule
     {
         if (!mc.player.isCreative())
         {
-            float health = mc.player.getHealth() + mc.player.getAbsorptionAmount();
+            float health = EntityUtil.getHealth(mc.player);
             if (safetyConfig.getValue() && playerDamage >= health + 0.5f)
             {
                 return true;
@@ -1080,7 +1080,7 @@ public class AutoCrystalModule extends RotationModule
 
     private boolean isCrystalLethalTo(double damage, LivingEntity entity)
     {
-        float health = entity.getHealth() + entity.getAbsorptionAmount();
+        float health = EntityUtil.getHealth(entity);
         if (damage * (1.0f + lethalMultiplier.getValue()) >= health + 0.5f)
         {
             return true;
