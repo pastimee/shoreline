@@ -6,6 +6,7 @@ import net.minecraft.entity.mob.Angerable;
 import net.minecraft.entity.mob.Monster;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.passive.SquidEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.vehicle.BoatEntity;
 import net.minecraft.entity.vehicle.ChestMinecartEntity;
 import net.minecraft.entity.vehicle.FurnaceMinecartEntity;
@@ -58,5 +59,13 @@ public class EntityUtil
         return e instanceof BoatEntity || e instanceof MinecartEntity
                 || e instanceof FurnaceMinecartEntity
                 || e instanceof ChestMinecartEntity;
+    }
+    public static float getHealth(Entity entity)
+    {
+        if (entity instanceof PlayerEntity)
+        {
+            return ((PlayerEntity) entity).getHealth() + ((PlayerEntity) entity).getAbsorptionAmount();
+        }
+        return 0;
     }
 }

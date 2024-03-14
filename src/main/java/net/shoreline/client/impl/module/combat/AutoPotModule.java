@@ -22,6 +22,7 @@ import net.minecraft.network.packet.c2s.play.UpdateSelectedSlotC2SPacket;
 import net.minecraft.potion.PotionUtil;
 import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.util.Hand;
+import net.shoreline.client.util.world.EntityUtil;
 
 import java.util.List;
 
@@ -84,7 +85,7 @@ public class AutoPotModule extends RotationModule
         }
         if (event.getStage() == EventStage.PRE)
         {
-            float health = mc.player.getHealth() + mc.player.getAbsorptionAmount();
+            float health = EntityUtil.getHealth(mc.player);
             if (health <= healthConfig.getValue()
                     && potionTimer.passed(delayConfig.getValue() * 1000.0f))
             {

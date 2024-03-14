@@ -484,7 +484,7 @@ public class AuraModule extends RotationModule
                     {
                         if (entity instanceof LivingEntity e)
                         {
-                            float health = e.getHealth() + e.getAbsorptionAmount();
+                            float health = EntityUtil.getHealth(e);
                             if (health < min)
                             {
                                 min = health;

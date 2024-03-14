@@ -35,6 +35,7 @@ import net.shoreline.client.init.Managers;
 import net.shoreline.client.init.Modules;
 import net.shoreline.client.util.chat.ChatUtil;
 import net.shoreline.client.util.world.EndCrystalUtil;
+import net.shoreline.client.util.world.EntityUtil;
 
 import java.util.List;
 
@@ -234,7 +235,7 @@ public class AutoTotemModule extends ToggleModule
         }
         if (!mc.player.isCreative())
         {
-            float health = mc.player.getHealth() + mc.player.getAbsorptionAmount();
+            float health = EntityUtil.getHealth(mc.player);
             if (health + 0.5 < healthConfig.getValue())
             {
                 offhand = Items.TOTEM_OF_UNDYING;
@@ -278,6 +279,7 @@ public class AutoTotemModule extends ToggleModule
                 // ChatUtil.error("No TOTEM_OF_UNDYING left in inventory!");
                 if (fallbackCrystalConfig.getValue())
                 {
+                    if (crappleConfig.getValue() && mc.player.isUsingItem()) return; //fix kicking
                     offhand = Items.END_CRYSTAL;
                 }
             }

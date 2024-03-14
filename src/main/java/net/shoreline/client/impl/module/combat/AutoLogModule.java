@@ -13,6 +13,7 @@ import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.item.Items;
 import net.minecraft.text.Text;
 import net.shoreline.client.util.Globals;
+import net.shoreline.client.util.world.EntityUtil;
 
 /**
  *
@@ -66,7 +67,7 @@ public class AutoLogModule extends ToggleModule
                 return;
             }
         }
-        float health = mc.player.getHealth() + mc.player.getAbsorptionAmount();
+        float health = EntityUtil.getHealth(mc.player);
         int totems = Managers.INVENTORY.count(Items.TOTEM_OF_UNDYING);
         boolean b2 = totems <= totemsConfig.getValue();
         if (health <= healthConfig.getValue())

@@ -33,6 +33,7 @@ import net.shoreline.client.init.Fonts;
 import net.shoreline.client.init.Managers;
 import net.shoreline.client.mixin.accessor.AccessorItemRenderer;
 import net.shoreline.client.util.render.ColorUtil;
+import net.shoreline.client.util.world.EntityUtil;
 import net.shoreline.client.util.world.FakePlayerEntity;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
@@ -456,7 +457,7 @@ public class NametagsModule extends ToggleModule
         }
         if (healthConfig.getValue())
         {
-            double health = Math.ceil(player.getHealth() + player.getAbsorptionAmount());
+            double health = Math.ceil(EntityUtil.getHealth(player));
             //
             Formatting hcolor;
             if (health > 18) 
