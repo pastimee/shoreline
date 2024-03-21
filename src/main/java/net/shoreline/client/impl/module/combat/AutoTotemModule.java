@@ -196,6 +196,7 @@ public class AutoTotemModule extends ToggleModule {
             if (slotTotem == -1) {
                 // ChatUtil.error("No TOTEM_OF_UNDYING left in inventory!");
                 if (fallbackCrystalConfig.getValue()) {
+                    if (crappleConfig.getValue() && mc.player.getMainHandStack().getItem() == Items.NETHERITE_SWORD || mc.player.getMainHandStack().getItem() == Items.DIAMOND_SWORD && mc.player.isUsingItem()) return; //fix kicking. checking for mainhand item is faster than offhand item
                     offhand = Items.END_CRYSTAL;
                 }
             } else if (off.isEmpty() || off.getItem() != Items.TOTEM_OF_UNDYING) {
